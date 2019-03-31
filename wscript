@@ -151,8 +151,7 @@ main_dependencies = [
         'name': 'posix',
         'desc': 'POSIX environment',
         # This should be good enough.
-        'func': check_statement(['poll.h', 'unistd.h', 'sys/mman.h'],
-            'struct pollfd pfd; poll(&pfd, 1, 0); fork(); int f[2]; pipe(f); munmap(f,0)'),
+        'func': check_true,
     }, {
         'name': '--android',
         'desc': 'Android environment',
@@ -317,12 +316,17 @@ iconv support use --disable-iconv.",
         'desc': 'Samba support (makes mpv GPLv3)',
         'deps': 'libdl && gpl',
         'func': check_pkg_config('smbclient'),
-        'default': 'disable',
+        'module': 'input',
+    }, {
+        'name': '--libdsm',
+        'desc': 'Samba & cifs support',
+        'func': check_true,
         'module': 'input',
     }, {
         'name' : '--lua',
         'desc' : 'Lua',
         'func': check_lua,
+        'default': 'disable',
     }, {
         'name' : '--javascript',
         'desc' : 'Javascript (MuJS backend)',
@@ -453,9 +457,7 @@ libav_dependencies = [
         'name': 'ffmpeg',
         'desc': 'libav* is FFmpeg',
         # FFmpeg <=> LIBAVUTIL_VERSION_MICRO>=100
-        'func': check_statement('libavcodec/version.h',
-                                'int x[LIBAVCODEC_VERSION_MICRO >= 100 ? 1 : -1]',
-                                use='libavcodec'),
+        'func': check_true,
     }, {
         # This check should always result in the opposite of ffmpeg-*.
         # Run it to make sure is_ffmpeg didn't fail for some other reason than
@@ -470,14 +472,14 @@ libav_dependencies = [
         'name': 'libav-any',
         'desc': 'Libav/FFmpeg library versions',
         'deps': 'ffmpeg || libav',
-        'func': check_ffmpeg_or_libav_versions(),
+        'func': check_true,
         'req': True,
         'fmsg': "Unable to find development files for some of the required \
 FFmpeg/Libav libraries. Git master is recommended."
     }, {
         'name': '--libavdevice',
         'desc': 'libavdevice',
-        'func': check_pkg_config('libavdevice', '>= 57.0.0'),
+        'func': check_true,
     }
 ]
 
